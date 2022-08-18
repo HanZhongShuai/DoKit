@@ -20,11 +20,11 @@ Pod::Spec.new do |s|
 iOS各式各样的工具集合
                        DESC
 
-  s.homepage         = 'https://www.dokit.cn'
+  s.homepage         = 'https://github.com/HanZhongShuai/DoKit'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'Apache-2.0', :file => 'LICENSE' }
   s.author           = { 'OrangeLab' => 'orange-lab@didiglobal.com' }
-  s.source           = { :git => 'https://github.com/didi/DoraemonKit.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/HanZhongShuai/DoKit.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '9.0'

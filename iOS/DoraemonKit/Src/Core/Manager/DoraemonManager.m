@@ -19,7 +19,6 @@
 #import "DoraemonNSLogViewController.h"
 #import "DoraemonNSLogListViewController.h"
 #import "DoraemonHomeWindow.h"
-#import "DoraemonStatisticsUtil.h"
 #import "DoraemonANRManager.h"
 #import "DoraemonLargeImageDetectionManager.h"
 #import "DoraemonMockManager.h"
@@ -191,13 +190,12 @@ typedef void (^DoraemonPerformanceBlock)(NSDictionary *);
         [DoraemonLargeImageDetectionManager shareInstance].minimumDetectionSize = _bigImageDetectionSize;
     }
     
-    //统计开源项目使用量 不用于任何恶意行为
-    [[DoraemonStatisticsUtil shareInstance] upLoadUserInfo];
-    
     //拉取最新的mock数据
-    [[DoraemonMockManager sharedInstance] queryMockData:^(int flag) {
-        DoKitLog(@"mock get data, flag == %i",flag);
-    }];
+    if (self.pId) {
+        [[DoraemonMockManager sharedInstance] queryMockData:^(int flag) {
+            DoKitLog(@"mock get data, flag == %i",flag);
+        }];
+    }
     
     //Weex工具的初始化
 #if DoraemonWithWeex
@@ -206,10 +204,9 @@ typedef void (^DoraemonPerformanceBlock)(NSDictionary *);
 #endif
     
     //开启健康体检
-    if ([[DoraemonCacheManager sharedInstance] healthStart]) {
+    if (self.pId && [[DoraemonCacheManager sharedInstance] healthStart]) {
         [[DoraemonHealthManager sharedInstance] startHealthCheck];
     }
-    
 }
 
 
@@ -218,9 +215,11 @@ typedef void (^DoraemonPerformanceBlock)(NSDictionary *);
  */
 - (void)initData{
     #pragma mark - 平台工具
-    [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonMockPlugin];
-    [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonHealthPlugin];
-    [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonFileSyncPlugin];
+    if (self.pId) {
+        [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonMockPlugin];
+        [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonHealthPlugin];
+        [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonFileSyncPlugin];
+    }
     
     #pragma mark - 常用工具
     [self addPluginWithPluginType:DoraemonManagerPluginType_DoraemonAppSettingPlugin];
